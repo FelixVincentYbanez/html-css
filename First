@@ -1,0 +1,256 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>SeQueueR | UC Student Affairs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="logo.png" type="image/png">
+    <style>
+      /* === Brand Colors === */
+      :root {
+        --uc-blue: #00417B;
+        --black: #000000;
+        --white: #FFFFFF;
+        --yellow: #FFD60A;
+        --warning-yellow: #FFDD00;
+        --light-gray: #E5E7EB;
+        --blue-light: #DBEAFE;
+        --medium-gray: #4B5563;
+      }
+  
+      /* === Reset === */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+  
+      body {
+        font-family: 'Segoe UI', sans-serif;
+        background-color: var(--light-gray);
+        color: var(--black);
+        line-height: 1.6;
+      }
+  
+      header {
+        background-color: var(--uc-blue);
+        color: var(--white);
+        padding: 1.5rem 1rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        justify-content: center;
+      }
+  
+      header img {
+        height: 50px;
+        width: auto;
+      }
+  
+      header .branding {
+        display: flex;
+        flex-direction: column;
+      }
+  
+      header .branding h1 {
+        font-size: 1.5rem;
+      }
+  
+      header .branding span {
+        font-size: 0.9rem;
+        color: var(--yellow);
+      }
+  
+      main {
+        padding: 2rem;
+        max-width: 700px;
+        margin: auto;
+      }
+  
+      .step {
+        display: none;
+        background-color: var(--white);
+        border-left: 6px solid var(--uc-blue);
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      }
+  
+      .step.active {
+        display: block;
+      }
+  
+      h2 {
+        color: var(--uc-blue);
+        margin-bottom: 1rem;
+      }
+  
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+  
+      input, select, textarea {
+        width: 100%;
+        padding: 0.5rem;
+        margin-bottom: 1rem;
+        border: 1px solid var(--medium-gray);
+        border-radius: 4px;
+      }
+  
+      .buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+  
+      .btn {
+        background-color: var(--uc-blue);
+        color: var(--white);
+        padding: 0.5rem 1.5rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+  
+      .btn-yellow {
+        background-color: var(--yellow);
+        color: var(--black);
+      }
+  
+      .btn-warning {
+        background-color: var(--warning-yellow);
+        color: var(--black);
+      }
+  
+      footer {
+        text-align: center;
+        background: var(--medium-gray);
+        color: var(--white);
+        padding: 1rem;
+      }
+  
+      .success {
+        text-align: center;
+        font-weight: bold;
+        color: green;
+      }
+  
+      @media (max-width: 600px) {
+        .buttons {
+          flex-direction: column;
+        }
+        header {
+          flex-direction: column;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+  
+    <!-- Header with Logo -->
+    <header>
+      <img src="logo.png" alt="UC Logo" />
+      <div class="branding">
+        <h1>SeQueueR</h1>
+        <span>UC Student Affairs</span>
+      </div>
+    </header>
+  
+    <main>
+  
+      <!-- Step 1: Select Service -->
+      <div class="step active" id="step1">
+        <h2>Select Service Type</h2>
+        <label for="service">Choose a service:</label>
+        <select id="service">
+          <option>Request for GMC</option>
+          <option>Insurance Payment</option>
+          <option>Submit Approval/Transmittal Letter</option>
+          <option>Request Temporary Gatepass</option>
+          <option>Apply for Uniform Exemption</option>
+          <option>Enrollment/Transferee</option>
+        </select>
+        <div class="buttons">
+          <button class="btn" onclick="nextStep(2)">Next</button>
+        </div>
+      </div>
+  
+      <!-- Step 2: Input Info -->
+      <div class="step" id="step2">
+        <h2>Input Your Details</h2>
+        <label>Full Name</label>
+        <input type="text" placeholder="Juan Dela Cruz">
+        <label>ID Number</label>
+        <input type="text" placeholder="2023-00000">
+        <label>Course</label>
+        <input type="text" placeholder="BS Computer Science">
+        <label>Year Level</label>
+        <select>
+          <option>1st Year</option>
+          <option>2nd Year</option>
+          <option>3rd Year</option>
+          <option>4th Year</option>
+        </select>
+        <div class="buttons">
+          <button class="btn" onclick="prevStep(1)">Back</button>
+          <button class="btn" onclick="nextStep(3)">Next</button>
+        </div>
+      </div>
+  
+      <!-- Step 3: Prioritization -->
+      <div class="step" id="step3">
+        <h2>Are You a Priority User?</h2>
+        <p>(Senior, PWD, Pregnant, etc.)</p>
+        <div class="buttons">
+          <button class="btn-yellow" onclick="nextStep(4)">Yes</button>
+          <button class="btn" onclick="nextStep(4)">No</button>
+        </div>
+      </div>
+  
+      <!-- Step 4: Generate Queue -->
+      <div class="step" id="step4">
+        <h2>Generate Queue Number</h2>
+        <p>Your queue number has been generated successfully.</p>
+        <p class="success">Queue Number: <strong>#A105</strong></p>
+        <p>Show this to the SAS personnel.</p>
+        <div class="buttons">
+          <button class="btn" onclick="nextStep(5)">Next</button>
+        </div>
+      </div>
+  
+      <!-- Step 5: Waiting -->
+      <div class="step" id="step5">
+        <h2>Please Wait for Your Turn</h2>
+        <p>You will be called via screen/audio/vibration.</p>
+        <div class="buttons">
+          <button class="btn-warning" onclick="restart()">Done</button>
+        </div>
+      </div>
+  
+    </main>
+  
+    <footer>
+      &copy; 2025 SeQueueR | UC Student Affairs
+    </footer>
+  
+    <script>
+      function nextStep(step) {
+        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+        document.getElementById('step' + step).classList.add('active');
+      }
+  
+      function prevStep(step) {
+        nextStep(step);
+      }
+  
+      function restart() {
+        alert("Thank you! Returning to start.");
+        nextStep(1);
+      }
+    </script>
+  
+  </body>
+  </html>
