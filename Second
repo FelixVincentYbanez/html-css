@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Queue System Flow</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      margin: 0;
+      background: #f4f7fa;
+      color: #333;
+    }
+
+    header {
+      background: #00417B;
+      color: white;
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    header img {
+      height: 60px;
+      margin-bottom: 10px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      letter-spacing: 1px;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: 30px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #00417B;
+    }
+
+    label {
+      display: block;
+      margin: 12px 0 6px;
+      font-weight: 600;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+
+    .services {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .service-btn {
+      padding: 14px;
+      border: 2px solid #00417B;
+      border-radius: 8px;
+      background: white;
+      color: #00417B;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .service-btn.selected {
+      background: #FFD60A;
+      color: black;
+      border-color: #FFD60A;
+      font-weight: bold;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+
+    .next { background: #00417B; color: white; }
+    .back { background: #ccc; color: black; }
+    .cancel { background: #ff4d4d; color: white; }
+    .remove-btn { background: #ff4d4d; color: white; font-size: 12px; padding: 5px 10px; margin-left: 10px; border-radius: 5px; cursor: pointer; }
+
+    button:hover { opacity: 0.85; }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 8px 0;
+      padding: 8px 12px;
+      background: #f4f4f4;
+      border-radius: 8px;
+    }
+
+    .qr-box {
+      text-align: center;
+      margin-top: 20px;
+      padding: 20px;
+      border: 2px dashed #00417B;
+      border-radius: 10px;
+      background: #f9fbff;
+    }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <!-- Replace src with your logo -->
+    <img src="your-logo.png" alt="Logo Here">
+    <h1>Queue Management System</h1>
+  </header>
+
+  <div class="container">
+    <!-- Step 1 -->
+    <div id="step1">
+      <h2>Step 1: Student Information</h2>
+      <label>Name:</label>
+      <input type="text" id="name">
+      <label>Student ID:</label>
+      <input type="text" id="studentId">
+      <label>Course:</label>
+      <input type="text" id="course">
+      <label>Year:</label>
+      <input type="text" id="year">
+      <div class="actions">
+        <button class="next" onclick="goToStep(2)">Proceed</button>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div id="step2" class="hidden">
+      <h2>Step 2: Select Service Type</h2>
+      <div class="services">
+        <div class="service-btn" onclick="toggleService(this)">Request for Good Moral Certificate</div>
+        <div class="service-btn" onclick="toggleService(this)">Insurance Payment</div>
+        <div class="service-btn" onclick="toggleService(this)">Submission of Approval/Transmittal Letter</div>
+        <div class="service-btn" onclick="toggleService(this)">Request for Temporary Gate Pass</div>
+        <div class="service-btn" onclick="toggleService(this)">Request for Uniform Exemption</div>
+        <div class="service-btn" onclick="toggleService(this)">Enrollment/Transfer</div>
+      </div>
+      <div class="actions">
+        <button class="back" onclick="goToStep(1)">Back</button>
+        <button class="next" onclick="goToStep(3)">Proceed</button>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div id="step3" class="hidden">
+      <h2>Step 3: Confirm Details</h2>
+      <p><b>Name:</b> <span id="summaryName"></span></p>
+      <p><b>Student ID:</b> <span id="summaryId"></span></p>
+      <p><b>Course & Year:</b> <span id="summaryCourse"></span></p>
+      <p><b>Selected Services:</b></p>
+      <div id="serviceSummary"></div>
+      <div class="actions">
+        <button class="back" onclick="goToStep(2)">Back</button>
+        <button class="cancel" onclick="resetForm()">Cancel</button>
+        <button class="next" onclick="goToStep(4)">Proceed</button>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div id="step4" class="hidden">
+      <h2>Step 4: Priority Check</h2>
+      <p>Do you belong to a priority group?</p>
+      <div class="actions">
+        <button class="back" onclick="goToStep(3)">Back</button>
+        <button class="next" onclick="generateQR(true)">Yes</button>
+        <button class="next" onclick="generateQR(false)">No</button>
+      </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div id="step5" class="hidden">
+      <h2>Step 5: Queue Number</h2>
+      <div class="qr-box">
+        <p><b>Your Queue Number:</b></p>
+        <h1 id="queueNumber"></h1>
+        <canvas id="qrCanvas"></canvas>
+      </div>
+      <div class="actions">
+        <button class="back" onclick="resetForm()">Finish</button>
+        <button class="next" onclick="window.print()">Print</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <script>
+    let selectedServices = [];
+    let currentStep = 1;
+    let queueCounter = 1;
+
+    function goToStep(step) {
+      document.querySelector(`#step${currentStep}`).classList.add("hidden");
+      document.querySelector(`#step${step}`).classList.remove("hidden");
+      currentStep = step;
+
+      if (step === 3) showSummary();
+    }
+
+    function toggleService(element) {
+      const service = element.textContent;
+      const index = selectedServices.indexOf(service);
+
+      if (index > -1) {
+        selectedServices.splice(index, 1);
+        element.classList.remove("selected");
+      } else {
+        if (selectedServices.length >= 2) {
+          alert("You can only select up to 2 services.");
+          return;
+        }
+        selectedServices.push(service);
+        element.classList.add("selected");
+      }
+    }
+
+    function showSummary() {
+      document.getElementById("summaryName").textContent = document.getElementById("name").value;
+      document.getElementById("summaryId").textContent = document.getElementById("studentId").value;
+      document.getElementById("summaryCourse").textContent = document.getElementById("course").value + " - " + document.getElementById("year").value;
+
+      const summaryDiv = document.getElementById("serviceSummary");
+      summaryDiv.innerHTML = "";
+      selectedServices.forEach(service => {
+        const div = document.createElement("div");
+        div.classList.add("summary-item");
+        div.innerHTML = `${service} <span class="remove-btn" onclick="removeService('${service}')">🗑 Remove</span>`;
+        summaryDiv.appendChild(div);
+      });
+    }
+
+    function removeService(service) {
+      selectedServices = selectedServices.filter(s => s !== service);
+      document.querySelectorAll(".service-btn").forEach(btn => {
+        if (btn.textContent === service) btn.classList.remove("selected");
+      });
+      showSummary();
+    }
+
+    function generateQR(isPriority) {
+      goToStep(5);
+
+      const prefix = isPriority ? "P" : "R";
+      const queueNum = prefix + "-" + queueCounter++;
+      document.getElementById("queueNumber").textContent = queueNum;
+
+      QRCode.toCanvas(document.getElementById("qrCanvas"), queueNum, { width: 200 }, function (error) {
+        if (error) console.error(error);
+      });
+    }
+
+    function resetForm() {
+      location.reload();
+    }
+  </script>
+</body>
+</html>
